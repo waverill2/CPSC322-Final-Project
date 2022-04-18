@@ -435,11 +435,43 @@ class MyDecisionTreeClassifier:
         pass # TODO: (BONUS) fix this
 
 class MyRandomForestClassifier():
+    """Represents a Random Forest Classifier.
+
+    Attributes:
+        X_train (list of list of obj): training data used to generate the forest classifier
+        y_train (list of obj): classifications for the given training data
+        forest_classifier (list of MyDecisionTreeClassifier): trained decision tree classifiers that make up the random
+        forest classifer
     """
-    """
-    def __init__(self, N: int) -> None:
+    def __init__(self) -> None:
+        """Initializer for MyRandomForestClassifier.
         """
+        self.X_train = None
+        self.y_train = None
+        self.forest_classifier = None
+    
+    def fit(self, X_train: list, y_train: list, N: int) -> None:
+        """Generates N "random" decision trees using X_train and y_train and takes the M most accurate decision trees to
+        make up the forest classifer.
+
+        Args:
+            X_train (list of list of obj): training data to build the decision tree classifiers from
+            y_train (list of obj): classifications for the given training data
+            N (int): number of decision tree classifiers to build
         """
-        self.N = N
-        self.F = None
-        self.M = None
+        self.X_train = X_train
+        self.y_train = y_train
+        self.forest_classifier = list()
+        # TODO - finish this
+
+    def predict(self, test_instnces: list) -> list:
+        """Makes predictions for the given test instances based on the list of decision tree classifiers. Uses majority
+        voting to make predictions based on the M most accurate decision trees.
+
+        Args:
+            test_instances (list of list of obj): test instances to classify
+
+        Returns:
+            list of obj: predictions for each given test instance
+        """
+        return list() # TODO - finish this
