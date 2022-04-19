@@ -3,8 +3,11 @@
 
 Classifier classes for the mysklearn package.
 """
+import numpy as np
+from scipy import rand
 
 from mysklearn import myutils
+from mysklearn import myevaluation
 from mysklearn.mysimplelinearregressor import MySimpleLinearRegressor
 
 class MySimpleLinearRegressionClassifier:
@@ -450,7 +453,7 @@ class MyRandomForestClassifier():
         self.y_train = None
         self.forest_classifier = None
     
-    def fit(self, X_train: list, y_train: list, N: int) -> None:
+    def fit(self, X_train: list, y_train: list, N: int, F: int, random_state: int = None) -> None:
         """Generates N "random" decision trees using X_train and y_train and takes the M most accurate decision trees to
         make up the forest classifer.
 
@@ -458,9 +461,22 @@ class MyRandomForestClassifier():
             X_train (list of list of obj): training data to build the decision tree classifiers from
             y_train (list of obj): classifications for the given training data
             N (int): number of decision tree classifiers to build
+            F (int): size of the attribute sets used to build the decision trees
+            random_state (int): random state to seed the bootstrap sample random number generator (helpful for testing)
         """
         self.X_train = X_train
         self.y_train = y_train
+        # build N decision trees based off bootstrapped samples of the given X_train and y_train lists
+        all_decision_trees = list()
+        for iteration in range(0, N):
+            # use a modified random state for reproduceability (helpful for testing)
+            random_state_bootstrap = random_state + iteration if random_state is not None else None
+            X_sample, X_validation, y_sample, y_validation = myevaluation.bootstrap_sample(X=X_train, y=y_train, n_samples=F, random_state=random_state_bootstrap)
+            decision_tree = MyDecisionTreeClassifier()
+            decision_tree.fit(X_train=X_sample, y_train=y_sample)
+            y_predictions = decision_tree.predict(X_test=X_validation)
+            decision_tree_accuracy = myevaluation.accuracy_score(y_true=y_validation, y_pred=y_predictions)
+            all_decision_trees.append([decision_tree, decision_tree_accuracy])
         self.forest_classifier = list()
         # TODO - finish this
 
