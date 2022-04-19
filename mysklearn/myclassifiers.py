@@ -450,8 +450,6 @@ class MyRandomForestClassifier():
     def __init__(self) -> None:
         """Initializer for MyRandomForestClassifier.
         """
-        self.X_train = None
-        self.y_train = None
         self.forest_classifier = None
     
     def fit(self, X_train: list, y_train: list, N: int, F: int, M: int, random_state: int = None) -> None:
@@ -466,8 +464,6 @@ class MyRandomForestClassifier():
             M (int): number of desired decision trees to create the random forest classifier from
             random_state (int): random state to seed the bootstrap sample random number generator (helpful for testing)
         """
-        self.X_train = X_train
-        self.y_train = y_train
         # build N decision trees based off bootstrapped samples of the given X_train and y_train lists
         all_decision_trees = list()
         for iteration in range(0, N):
@@ -499,10 +495,10 @@ class MyRandomForestClassifier():
             for decision_tree in self.forest_classifier:
                 # get a prediction from each decision tree in the forest classifier
                 prediction = decision_tree.predict([test_instance])
-                if instance_forest_predictions.get(prediction) is None:
-                    instance_forest_predictions[prediction] = 1
+                if instance_forest_predictions.get(prediction[0]) is None:
+                    instance_forest_predictions[prediction[0]] = 1
                 else:
-                    instance_forest_predictions[prediction] += 1
+                    instance_forest_predictions[prediction[0]] += 1
             instance_forest_predictions = dict(sorted(instance_forest_predictions.items(), key=lambda item: item[0]))
             # select the most commonly predicted value from the forest of decision trees
             max_instance_prediction_count = max(list(instance_forest_predictions.values()))

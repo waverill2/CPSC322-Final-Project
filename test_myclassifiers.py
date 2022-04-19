@@ -506,3 +506,13 @@ def test_decision_tree_classifier_predict():
     decision_tree_classifier.fit(X_train=X_TRAIN_IPHONE, y_train=Y_TRAIN_IPHONE)
     predictions = decision_tree_classifier.predict(X_test=X_TEST_IPHONE)
     assert predictions == Y_ACTUAL_IPHONE
+
+def test_random_forest_classifier_predict():
+    random_forest_classifier = MyRandomForestClassifier()
+    num_decision_trees = 15
+    attribute_set_size = len(IN_CLASS_INTERVIEW_TABLE)
+    num_trees_in_forest = 10
+    random_forest_classifier.fit(X_train=X_TRAIN_IN_CLASS_INTERVIEW, y_train=Y_TRAIN_IN_CLASS_INTERVIEW,
+        N=num_decision_trees, F=attribute_set_size, M=num_trees_in_forest)
+    predictions = random_forest_classifier.predict(test_instances=X_TEST_IN_CLASS_INTERVIEW)
+    assert predictions == Y_ACTUAL_IN_CLASS_INTERVIEW
