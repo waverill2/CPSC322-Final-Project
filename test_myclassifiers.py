@@ -11,7 +11,8 @@ from mysklearn.mysimplelinearregressor import MySimpleLinearRegressor
 from mysklearn.myclassifiers import MySimpleLinearRegressionClassifier,\
     MyKNeighborsClassifier,\
     MyDummyClassifier,\
-    MyDecisionTreeClassifier
+    MyDecisionTreeClassifier, \
+    MyRandomForestClassifier
 from mysklearn.myutils import basic_discretizer1, basic_discretizer2
 
 # constants used in test_simple_linear_regression_classifier_fit
@@ -475,8 +476,6 @@ def test_decision_tree_classifier_fit():
     assert decision_tree_classifier.X_train == X_TRAIN_IN_CLASS_INTERVIEW
     assert decision_tree_classifier.y_train == Y_TRAIN_IN_CLASS_INTERVIEW
     assert decision_tree_classifier.tree == IN_CLASS_INTERVIEW_DECISION_TREE
-    print()
-    decision_tree_classifier.print_decision_rules()
     # test against the Bramer "degrees" decision tree test case
     # print("Test Case 2")
     decision_tree_classifier.fit(X_train=X_TRAIN_BRAMER_DEGREES, y_train=Y_TRAIN_BRAMER_DEGREES)

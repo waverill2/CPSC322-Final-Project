@@ -5,6 +5,7 @@ Classifier classes for the mysklearn package.
 """
 import numpy as np
 from scipy import rand
+from sqlalchemy import all_
 
 from mysklearn import myutils
 from mysklearn import myevaluation
@@ -453,7 +454,7 @@ class MyRandomForestClassifier():
         self.y_train = None
         self.forest_classifier = None
     
-    def fit(self, X_train: list, y_train: list, N: int, F: int, random_state: int = None) -> None:
+    def fit(self, X_train: list, y_train: list, N: int, F: int, M: int, random_state: int = None) -> None:
         """Generates N "random" decision trees using X_train and y_train and takes the M most accurate decision trees to
         make up the forest classifer.
 
@@ -462,6 +463,7 @@ class MyRandomForestClassifier():
             y_train (list of obj): classifications for the given training data
             N (int): number of decision tree classifiers to build
             F (int): size of the attribute sets used to build the decision trees
+            M (int): number of desired decision trees to create the random forest classifier from
             random_state (int): random state to seed the bootstrap sample random number generator (helpful for testing)
         """
         self.X_train = X_train
@@ -474,13 +476,14 @@ class MyRandomForestClassifier():
             X_sample, X_validation, y_sample, y_validation = myevaluation.bootstrap_sample(X=X_train, y=y_train, n_samples=F, random_state=random_state_bootstrap)
             decision_tree = MyDecisionTreeClassifier()
             decision_tree.fit(X_train=X_sample, y_train=y_sample)
+            # calculate the accuracy of the decision tree
             y_predictions = decision_tree.predict(X_test=X_validation)
             decision_tree_accuracy = myevaluation.accuracy_score(y_true=y_validation, y_pred=y_predictions)
             all_decision_trees.append([decision_tree, decision_tree_accuracy])
-        self.forest_classifier = list()
-        # TODO - finish this
+        all_decision_trees = sorted(all_decision_trees, key=lambda l:l[1])[:M]
+        self.forest_classifier = [decision_tree_row[0] for decision_tree_row in all_decision_trees]
 
-    def predict(self, test_instnces: list) -> list:
+    def predict(self, test_instances: list) -> list:
         """Makes predictions for the given test instances based on the list of decision tree classifiers. Uses majority
         voting to make predictions based on the M most accurate decision trees.
 
@@ -490,4 +493,21 @@ class MyRandomForestClassifier():
         Returns:
             list of obj: predictions for each given test instance
         """
-        return list() # TODO - finish this
+        all_predictions = list()
+        for test_instance in test_instances:
+            instance_forest_predictions = dict()
+            for decision_tree in self.forest_classifier:
+                # get a prediction from each decision tree in the forest classifier
+                prediction = decision_tree.predict([test_instance])
+                if instance_forest_predictions.get(prediction) is None:
+                    instance_forest_predictions[prediction] = 1
+                else:
+                    instance_forest_predictions[prediction] += 1
+            instance_forest_predictions = dict(sorted(instance_forest_predictions.items(), key=lambda item: item[0]))
+            # select the most commonly predicted value from the forest of decision trees
+            max_instance_prediction_count = max(list(instance_forest_predictions.values()))
+            for prediction, prediction_count in instance_forest_predictions.items():
+                if max_instance_prediction_count == prediction_count:
+                    all_predictions.append(prediction)
+                    break
+        return all_predictions

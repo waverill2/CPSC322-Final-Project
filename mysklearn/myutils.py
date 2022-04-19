@@ -187,9 +187,9 @@ def tdidt(current_instances:list, header:list, attribute_domains:dict, available
             for instance in current_instances:
                 instance_class = instance[len(instance)-1]
                 if instance_classes.get(instance_class) is None:
-                    instance_classes[attribute_class] = 1
+                    instance_classes[instance_class] = 1
                 else:
-                    instance_classes[attribute_class] += 1
+                    instance_classes[instance_class] += 1
             instance_classes = dict(sorted(instance_classes.items(), key=lambda item: item[0]))
             # get the max value
             max_class_value = max(list(instance_classes.values()))
