@@ -73,6 +73,27 @@ class MyPyTable:
 
         return new_list
 
+    def drop_column(self, col_name):
+        # get the index of the column to remove
+
+        # create a new header first
+        index = self.column_names.index(col_name)
+        new_header = []
+        for i in range(len(self.column_names)):
+            if i != index:
+                new_header.append(self.column_names[i])
+        self.column_names = new_header
+
+        # now create the new data table
+        table = []
+        for instance in self.data:
+            new_row = []
+            for i in range(len(instance)):
+                if i != index:
+                    new_row.append(instance[i])
+            table.append(new_row)
+        self.data = table
+
     def convert_to_numeric(self):
         """Try to convert each value in the table to a numeric type (float).
         Notes:
