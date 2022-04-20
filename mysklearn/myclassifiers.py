@@ -5,7 +5,7 @@ Classifier classes for the mysklearn package.
 """
 import numpy as np
 from scipy import rand
-from sqlalchemy import all_
+# from sqlalchemy import all_
 
 from mysklearn import myutils
 from mysklearn import myevaluation
