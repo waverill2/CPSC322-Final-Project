@@ -23,5 +23,5 @@ all_star_forest_classifer.fit(X_train=X_train, y_train=y_train, N=20, F=500, M=1
 
 # pickle the trained random forest clasifier
 pickle_file = open('forest_classifier.p', 'wb')
-pickle.dump(all_star_forest_classifer)
+pickle.dump(all_star_forest_classifer, pickle_file)
 pickle_file.close()
