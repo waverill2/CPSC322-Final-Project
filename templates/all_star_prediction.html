@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Baseball All Star Predictor</title>
+    </head>
+    <body>
+        {% if prediction == 'true' %}
+            <h1 style="text-align: center;">Your Player is an All Star!</h1>
+        {% else %}
+            <h1 style="text-align: center;">Your Player is not an All Star :(</h1>
+        {% endif %}
+        <div style="text-align: center;"><a href="{{ url_for('index') }}">Make another prediction</a></div>
+    </body>
+</html>

@@ -3,60 +3,57 @@
 
 Flask backend for the baseball all-star prediction app.
 """
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from os import environ
 from pickle import load
 
-APP_NAME = 'Baseball All-Star Predictor'
-app = Flask(APP_NAME)
+app = Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def index():
     """Route for the root page of the all-star predictor app. 
-    TODO - create an html template to take instances to predict.
 
     Methods = GET
 
     Status Codes:
         200 - OK
     """
-    return f'<h1 style=\"text-align: center\"> Welcome to the {APP_NAME} App'
+    return render_template('index.html')
 
-@app.route('/predict', methods=['GET'])
+@app.route('/', methods=['POST'])
 def predict():
-    """Route for the predict API endpoint for the all star prediction app. 
-    TODO - create an html template to display predictions.
+    """Route for the predict API endpoint for the all star prediction app.
 
-    Methods = GET
+    Methods = POST
 
     Status Codes:
         200 - prediction was made succesfully
         400 - prediction was None (client error)
     """
     # get all the different fields required for the prediction instance
-    year = request.args.get('year', '')
-    games_played = request.args.get('games_played', '')
-    at_bats = request.args.get('at_bats', '')
-    runs = request.args.get('runs', '')
-    hits = request.args.get('hits', '')
-    doubles = request.args.get('doubles', '')
-    triples = request.args.get('triples', '')
-    home_runs = request.args.get('home_runs', '')
-    runs_batted_in = request.args.get('runs_batted_in', '')
-    stolen_bases = request.args.get('stolen_bases', '')
-    walks = request.args.get('walks', '')
-    strikeouts = request.args.get('strikeouts', '')
-    putouts = request.args.get('putouts', '')
-    assists = request.args.get('assists', '')
-    errors = request.args.get('errors', '')
+    year = request.form['year']
+    games_played = request.form['games_played']
+    at_bats = request.form['at_bats']
+    runs = request.form['runs']
+    hits = request.form['hits']
+    doubles = request.form['doubles']
+    triples = request.form['triples']
+    home_runs = request.form['home_runs']
+    runs_batted_in = request.form['runs_batted_in']
+    stolen_bases = request.form['stolen_bases']
+    walks = request.form['walks']
+    strikeouts = request.form['strikeouts']
+    putouts = request.form['putouts']
+    assists = request.form['assists']
+    errors = request.form['errors']
+    instance = list()
     instance = [year, games_played, at_bats, runs, hits, doubles, triples, home_runs, runs_batted_in, stolen_bases, \
-        walks, strikeouts, putouts, assists, errors, instance]
+        walks, strikeouts, putouts, assists, errors]
     # predict the class for the given data and return it as JSON
     prediction = predict_all_star(instance=instance)
     if prediction == None:
-        return 'error making prediction', 400
-    result = {'prediction' : prediction}
-    return jsonify(result), 200
+        return render_template('error_making_prediction.html')
+    return render_template('all_star_prediction.html', prediction=prediction)
 
 def predict_all_star(instance:list) -> str:
     """Method to predict whether the given baseball player instance is an all star.
@@ -68,11 +65,15 @@ def predict_all_star(instance:list) -> str:
         str: predicted class if the player instance is an all all star (None if something goes wrong)
     """
     # unpickle the random forest classifier
-    pickle_file = open('forest_classifer.p', 'rb')
+    pickle_file = open('forest_classifier.p', 'rb')
     pickle_forest_classifier = load(pickle_file)
     pickle_file.close()
-
-    # predict the given instance using the pickle forest classifier (only one prediction in the predictions list)
+    # if the instance is not complete, return None
+    for value in instance:
+        if value is None:
+            return None
+    # TODO - discretize the instance so it can be used to make a prediction
+    # predict the discretized instance using the pickle forest classifier (only one prediction in the predictions list)
     prediction = pickle_forest_classifier.predict([instance])[0]
     return prediction
 
