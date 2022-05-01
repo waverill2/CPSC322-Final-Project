@@ -1,6 +1,6 @@
 import numpy as np
 
-from mypytable import MyPyTable
+from mysklearn.mypytable import MyPyTable
 
 def get_column_list(table: list, header: list, col_name: str):
     """Gets the values in the desired column from a given 2D list of values.
