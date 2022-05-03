@@ -5,6 +5,7 @@ Tests for classifiers in the mysklearn package.
 """
 
 import numpy as np
+from scipy import rand
 
 from mysklearn.myclassifiers import MyNaiveBayesClassifier
 from mysklearn.mysimplelinearregressor import MySimpleLinearRegressor
@@ -14,6 +15,7 @@ from mysklearn.myclassifiers import MySimpleLinearRegressionClassifier,\
     MyDecisionTreeClassifier, \
     MyRandomForestClassifier
 from mysklearn.myutils import basic_discretizer1, basic_discretizer2
+from mysklearn.mypytable import MyPyTable
 
 # constants used in test_simple_linear_regression_classifier_fit
 np.random.seed(0) # seed the random number generator for reproducible test results
