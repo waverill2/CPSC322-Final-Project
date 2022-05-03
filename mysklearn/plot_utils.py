@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 from sympy import rotations
 
-import utils
+import mysklearn.utils as utils
 
 def plot_bar_chart(x_values: list, y_values: list, title: str=None, x_axis_name: str = None,
     y_axis_name: str = None, x_tick_labels:list = None, y_tick_labels: list = None):
