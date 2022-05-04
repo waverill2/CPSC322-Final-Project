@@ -268,4 +268,4 @@ def discretize_by_index(value, index: int) -> float:
 
 if __name__ == '__main__':
     port = environ.get('PORT', 5000)
-    app.run(debug=True, port=port) # TURN DEBUG MODE TO FALSE
+    app.run(host='0.0.0.0', debug=False, port=port)
